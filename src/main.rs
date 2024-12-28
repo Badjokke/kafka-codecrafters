@@ -4,6 +4,7 @@ use std::{io::{Read, Write}, net::TcpListener};
 
 
 fn parse_correlation_id_v2(buffer:&[u8]) -> i32{
+    println!("{:?}",buffer);
    let byte_offset = 8;
    let correlation_id = i32::from_be_bytes(buffer[byte_offset..byte_offset+4].try_into().unwrap());
    return correlation_id; 
