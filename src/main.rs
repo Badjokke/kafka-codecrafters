@@ -7,7 +7,7 @@ fn main() {
          match stream {
              Ok(mut _stream) => {
                 let a: i32 = 4;
-               let _bytes_sent= _stream.write(&[u8::try_from(a).unwrap()]).unwrap();  
+               let _bytes_sent= _stream.write(&a.to_be_bytes()).unwrap();  
              }
              Err(e) => {
                  println!("error: {}", e);
