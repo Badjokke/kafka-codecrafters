@@ -15,10 +15,10 @@ fn main() {
      for stream in listener.incoming() {
          match stream {
              Ok(mut _stream) => {
-                let buf: &mut [u8] = &mut[];
-                let msg = _stream.read(buf).unwrap();
+                let mut buf: [u8;20] = [0;20];
+                let msg = _stream.read(&mut buf).unwrap();
                 println!("recieved {msg} bytes");
-                let correlation_id:i32 = parse_correlation_id_v2(buf);
+                let correlation_id:i32 = parse_correlation_id_v2(&buf);
                 let message_size:i32 = 4;
                 let response = [message_size.to_be_bytes(), correlation_id.to_be_bytes()].concat(); 
                 let _bytes_send = _stream.write(&response).expect("Failed to send");
