@@ -6,7 +6,8 @@ fn main() {
      for stream in listener.incoming() {
          match stream {
              Ok(mut _stream) => {
-               let bytes_sent= _stream.write(&[0,0,7]).unwrap();  
+
+               let _bytes_sent= _stream.write(&[0,0,0,4,0,0,0,0,0,0,0,7]).unwrap();  
              }
              Err(e) => {
                  println!("error: {}", e);
