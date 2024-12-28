@@ -7,6 +7,7 @@ fn parse_correlation_id_v2(buffer:&[u8]) -> i32{
     println!("{:?}",buffer);
    let byte_offset = 8;
    let correlation_id = i32::from_be_bytes(buffer[byte_offset..byte_offset+4].try_into().unwrap());
+   println!("Extracted correlation id: {correlation_id}");
    return correlation_id; 
 }
 
@@ -21,7 +22,9 @@ fn main() {
                 let correlation_id:i32 = parse_correlation_id_v2(&buf);
                 let message_size:i32 = 4;
                 let response = [message_size.to_be_bytes(), correlation_id.to_be_bytes()].concat(); 
-                let _bytes_send = _stream.write(&response).expect("Failed to send");
+                let bytes_send = _stream.write(&response).expect("Failed to send");
+                println!("Sent {bytes_send}  bytes");
+                let _res = _stream.flush().expect("failed to flush buffer");
              }
              Err(e) => {
                  println!("error: {}", e);
