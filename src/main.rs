@@ -16,7 +16,7 @@ fn main() {
      for stream in listener.incoming() {
          match stream {
              Ok(mut _stream) => {
-                let mut buf: [u8;20] = [0;20];
+                let mut buf: [u8;1024] = [0;1024];
                 let msg = _stream.read(&mut buf).unwrap();
                 println!("recieved {msg} bytes");
                 let correlation_id:i32 = parse_correlation_id_v2(&buf);
