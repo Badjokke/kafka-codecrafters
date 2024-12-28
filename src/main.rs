@@ -23,8 +23,7 @@ fn main() {
                 let message_size:i32 = 4;
                 let response = [message_size.to_be_bytes(), correlation_id.to_be_bytes()].concat(); 
                 let bytes_send = _stream.write(&response).expect("Failed to send");
-                println!("Sent {bytes_send}  bytes");
-                let _res = _stream.flush().expect("failed to flush buffer");
+                println!("Sending response: {:?}", response);
              }
              Err(e) => {
                  println!("error: {}", e);
