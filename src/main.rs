@@ -7,7 +7,9 @@ fn main() {
          match stream {
              Ok(mut _stream) => {
                 let a: i32 = 4;
-               let _bytes_sent= _stream.write(&a.to_be_bytes()).unwrap();  
+                let correlation_id:i32 = 7;
+                let response = [a.to_be_bytes(), correlation_id.to_be_bytes()].concat();
+               let _bytes_sent= _stream.write(&response).unwrap();  
              }
              Err(e) => {
                  println!("error: {}", e);
