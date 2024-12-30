@@ -1,4 +1,31 @@
-use std::{io::Read, net::TcpStream, ptr::null};
+use std::{io::Read, net::TcpStream, ptr::null, mem};
+
+
+pub trait ToBytes{
+    fn to_bytes(&self) -> Vec<u8>;
+}
+
+impl ToBytes for i32{
+    fn to_bytes(&self) -> Vec<u8> {
+        return self.to_be_bytes().to_vec();
+    }
+}
+impl ToBytes for i16{
+    fn to_bytes(&self) -> Vec<u8> {
+        return self.to_be_bytes().to_vec();
+    }
+}
+impl ToBytes for u8{
+    fn to_bytes(&self) -> Vec<u8> {
+        return self.to_be_bytes().to_vec();       
+    }
+}
+
+impl ToBytes for String{
+    fn to_bytes(&self) -> Vec<u8> {
+        self.clone().into_bytes()
+    }
+}
 
 pub fn stream_input_to_string(stream: &mut TcpStream) ->Option<String>{
     let payload_size: i32 = get_message_size(stream);
@@ -12,6 +39,10 @@ pub fn stream_input_to_bytes(stream: &mut TcpStream) -> Option<Vec<u8>>{
         return None;
     }
     read_stream_to_bytes(stream,payload_size as usize)
+}
+
+pub fn create_response(values:Vec<Box<dyn ToBytes>>) -> Vec<u8>{
+    values.iter().flat_map(|item| item.to_bytes()).collect() 
 }
 
 fn get_message_size(stream: &mut TcpStream) -> i32{
