@@ -13,7 +13,7 @@ fn main() {
                     Some(buffer) => buffer,
                     None => panic!("No input!")
                 };
-                println!("extracted buffer: {:?}", buf);
+                let (api_key, api_version, correlation_id )= kafka_header_util::parse_header(&buf);
              }
              Err(e) => {
                  println!("error: {}", e);
