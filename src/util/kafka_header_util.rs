@@ -1,17 +1,17 @@
 use crate::util::byte_util;
 
 fn parse_correlation_id_v2(buffer:&Vec<u8>) -> i32{
-   let byte_offset = 8;
+   let byte_offset = 4;
    let correlation_id = i32::from_be_bytes(buffer[byte_offset..byte_offset+4].try_into().unwrap());
    correlation_id
 }
 fn parse_request_api_key(buffer:&Vec<u8>) -> i16{
-    let byte_offset = 4;
+    let byte_offset = 0;
     let request_api_key = i16::from_be_bytes(buffer[byte_offset..byte_offset+2].try_into().unwrap());
     request_api_key
 }
 fn parse_request_api_version(buffer:&Vec<u8>) -> i16{
-    let byte_offset = 6;
+    let byte_offset = 2;
     let request_api_version = i16::from_be_bytes(buffer[byte_offset..byte_offset+2].try_into().unwrap());
     request_api_version
 }
