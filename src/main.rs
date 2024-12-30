@@ -21,7 +21,7 @@ fn main() {
                 items.push(Box::new(kafka_constants::UNSUPPORTED_API_VERSION_ERROR_CODE));
                 
                 if api_key == kafka_constants::KAFKA_API_VERSIONS_KEY{
-                    kafka_response_util::send_response(&mut stream, &create_response(items));
+                    kafka_response_util::send_response(&mut stream, &mut create_response(items));
                 }
              }
              Err(e) => {
