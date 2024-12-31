@@ -1,5 +1,4 @@
-use std::{io::Read, net::TcpStream, ptr::null, mem};
-
+use std::{io::{Read, Write}, mem, net::TcpStream, ptr::null};
 
 pub trait ToBytes{
     fn to_bytes(&self) -> Vec<u8>;
@@ -41,6 +40,19 @@ pub fn stream_input_to_bytes(stream: &mut TcpStream) -> Option<Vec<u8>>{
     read_stream_to_bytes(stream,payload_size as usize)
 }
 
+pub fn send_response(stream:&mut TcpStream, buf:&Vec<u8>){
+    print!("Sending response: {:?}", buf);
+    let result = stream.write(&buf);
+    match result{
+        Ok(bytes_send) => {
+            println!("{bytes_send} bytes send");
+            let _flush_result = stream.flush();
+        },
+        Err(e) => {
+            println!("{:?}", e);
+        }
+    }
+}
 pub fn create_response(values:Vec<Box<dyn ToBytes>>) -> Vec<u8>{
     values.iter().flat_map(|item| item.to_bytes()).collect() 
 }

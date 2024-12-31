@@ -1,15 +1,10 @@
 use std::{io::Write, net::TcpStream};
-
-pub fn send_response(stream:&mut TcpStream, buf:&Vec<u8>){
-    print!("Sending response: {:?}", buf);
-    let result = stream.write(&buf);
-    match result{
-        Ok(bytes_send) => {
-            println!("{bytes_send} bytes send");
-            let _flush_result = stream.flush();
-        },
-        Err(e) => {
-            println!("{:?}", e);
-        }
-    }
+use crate::util::byte_util::{create_response, ToBytes};
+pub fn create_api_version_response(error_code: i16, api_key: i16, min_version: i16, max_version: i16) -> Vec<Box<dyn ToBytes>>{
+    let mut items: Vec<Box<dyn ToBytes>> = Vec::new();
+    items.push(Box::new(error_code));
+    items.push(Box::new(api_key));
+    items.push(Box::new(min_version));
+    items.push(Box::new(max_version));
+    items
 }

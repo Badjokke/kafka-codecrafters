@@ -3,8 +3,7 @@ use std::{io::{Read, Write}, net::TcpListener};
 pub mod util;
 use util::kafka_constants;
 use util::kafka_header_util;
-use util::byte_util::stream_input_to_bytes;
-use util::byte_util::create_response;
+use util::byte_util::{stream_input_to_bytes, create_response, send_response};
 use util::kafka_response_util;
 fn main() {
     let listener = TcpListener::bind("127.0.0.1:9092").unwrap();
@@ -17,12 +16,15 @@ fn main() {
                 };
                 let (api_key, _api_version, correlation_id )= kafka_header_util::parse_header(&buf);
                 let mut items: Vec<Box<dyn util::byte_util::ToBytes>> = Vec::new();
-                items.push(Box::new(6 as i32));
+                items.push(Box::new(16));
                 items.push(Box::new(correlation_id));
                 items.push(Box::new(kafka_constants::UNSUPPORTED_API_VERSION_ERROR_CODE));
                 
                 if api_key == kafka_constants::KAFKA_API_VERSIONS_KEY{
-                    kafka_response_util::send_response(&mut stream, &create_response(items));
+                    let mut api_versions_body = kafka_response_util::create_api_version_response(kafka_constants::NO_ERROR, kafka_constants::KAFKA_API_VERSIONS_KEY,
+                         3, 4);
+                         items.append(&mut api_versions_body);
+                    send_response(&mut stream, &create_response(items));
                 }
              }
              Err(e) => {
