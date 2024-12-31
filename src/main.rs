@@ -16,7 +16,7 @@ fn main() {
                 };
                 let (api_key, _api_version, correlation_id )= kafka_header_util::parse_header(&buf);
                 let mut items: Vec<Box<dyn util::byte_util::ToBytes>> = Vec::new();
-                items.push(Box::new(16));
+                items.push(Box::new(18));
                 items.push(Box::new(correlation_id));
                 items.push(Box::new(kafka_constants::UNSUPPORTED_API_VERSION_ERROR_CODE));
                 
