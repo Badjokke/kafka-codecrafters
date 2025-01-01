@@ -55,8 +55,9 @@ pub fn send_response(stream:&mut TcpStream, buf:&Vec<u8>){
 }
 pub fn create_response(values:Vec<Box<dyn ToBytes>>) -> Vec<u8>{
     let mut bytes:Vec<u8> = values.iter().flat_map(|item| item.to_bytes()).collect();
-    let mut response = bytes.len().to_be_bytes().to_vec();
-    println!("bytes: {:?}", response);
+    let mut response: Vec<u8>  =Vec::new();
+    let msg_size = bytes.len() as i32;
+    response.append(&mut msg_size.to_be_bytes().to_vec());
     response.append(&mut bytes);
     response
 }
