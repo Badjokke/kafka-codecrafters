@@ -11,25 +11,19 @@ pub struct ApiVersionsResponse{
 impl ToBytes for ApiVersionsResponse{
     fn to_bytes(&self) -> Vec<u8> {
         let mut bytes:Vec<u8> = Vec::new();
-        let mut error_code_bytes = self.error_code.to_be_bytes().to_vec();
-        let mut api_key_bytes = self.api_key.to_be_bytes().to_vec();
-        let mut min_version_bytes = self.min_version.to_be_bytes().to_vec();
-        let mut max_version_bytes = self.max_version.to_be_bytes().to_vec();
-        let mut throttle_time_bytes = self.throttle_time.to_be_bytes().to_vec();
         //error_code
-        bytes.append(&mut error_code_bytes);
+        bytes.extend(&self.error_code.to_be_bytes());
         //api version count
-        //bytes.append(&mut (1 as i32).to_be_bytes().to_vec());
+        bytes.extend(&(1 as i32).to_be_bytes());
         //api version "struct"
-        bytes.append(&mut api_key_bytes);
-        bytes.append(&mut min_version_bytes);
-        bytes.append(&mut max_version_bytes);
-        //bytes.append(&mut (0 as u8).to_be_bytes().to_vec());
+        bytes.extend(&self.api_key.to_be_bytes());
+        bytes.extend(&self.min_version.to_be_bytes());
+        bytes.extend(&self.max_version.to_be_bytes());
+        bytes.extend(&(0 as u8).to_be_bytes());
         //throttle
-        bytes.append(&mut throttle_time_bytes);
+        bytes.extend(&self.throttle_time.to_be_bytes());
         //empty tag buffer
-        //bytes.append(&mut (0 as u8).to_be_bytes().to_vec());
-        
+        bytes.extend(&(0 as u8).to_be_bytes()); 
         bytes
     }
 }
