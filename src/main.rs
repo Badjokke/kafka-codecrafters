@@ -14,13 +14,14 @@ fn main() {
                     Some(buffer) => buffer,
                     None => panic!("No input!")
                 };
-                let (api_key, _api_version, correlation_id )= kafka_header_util::parse_header(&buf);
+                let (api_key, api_version, correlation_id )= kafka_header_util::parse_header(&buf);
                 let mut items: Vec<Box<dyn util::byte_util::ToBytes>> = Vec::new();
                 items.push(Box::new(correlation_id));
                 
                 if api_key == kafka_constants::KAFKA_API_VERSIONS_KEY{
+                    let error_code:i16 = if api_version == 4{kafka_constants::NO_ERROR} else{kafka_constants::UNSUPPORTED_API_VERSION_ERROR_CODE};
                     let api_versions_body = 
-                    kafka_response_util::create_api_version_response(kafka_constants::NO_ERROR,
+                    kafka_response_util::create_api_version_response( error_code,
                          kafka_constants::KAFKA_API_VERSIONS_KEY,
                          1, 4, 500);
                          items.push(Box::new(api_versions_body));
