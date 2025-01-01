@@ -21,6 +21,7 @@ impl ToBytes for ApiVersionsResponse{
         bytes.append(&mut api_key_bytes);
         bytes.append(&mut min_version_bytes);
         bytes.append(&mut max_version_bytes);
+        bytes.append(&mut (0 as u8).to_be_bytes().to_vec());
         bytes.append(&mut throttle_time_bytes);
         
         bytes
