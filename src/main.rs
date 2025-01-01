@@ -22,7 +22,7 @@ fn main() {
                     let api_versions_body = 
                     kafka_response_util::create_api_version_response(kafka_constants::NO_ERROR,
                          0,
-                         3, 4, 0);
+                         1, 4, 500);
                          items.push(Box::new(api_versions_body));
                     send_response(&mut stream, &create_response(items));
                 }
