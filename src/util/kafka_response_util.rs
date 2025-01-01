@@ -14,7 +14,7 @@ impl ToBytes for ApiVersionsResponse{
         //error_code
         bytes.extend(&self.error_code.to_be_bytes());
         //api version count
-        bytes.extend(&(1 as u8).to_be_bytes());
+        bytes.extend(&(2 as u8).to_be_bytes());
         //api version "struct"
         bytes.extend(&self.api_key.to_be_bytes());
         bytes.extend(&self.min_version.to_be_bytes());
