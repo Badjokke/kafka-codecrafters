@@ -19,16 +19,16 @@ impl ToBytes for ApiVersionsResponse{
         //error_code
         bytes.append(&mut error_code_bytes);
         //api version count
-        bytes.append(&mut (1 as i32).to_be_bytes().to_vec());
+        //bytes.append(&mut (1 as i32).to_be_bytes().to_vec());
         //api version "struct"
         bytes.append(&mut api_key_bytes);
         bytes.append(&mut min_version_bytes);
         bytes.append(&mut max_version_bytes);
-        bytes.append(&mut (0 as u8).to_be_bytes().to_vec());
+        //bytes.append(&mut (0 as u8).to_be_bytes().to_vec());
         //throttle
         bytes.append(&mut throttle_time_bytes);
         //empty tag buffer
-        bytes.append(&mut (0 as u8).to_be_bytes().to_vec());
+        //bytes.append(&mut (0 as u8).to_be_bytes().to_vec());
         
         bytes
     }
