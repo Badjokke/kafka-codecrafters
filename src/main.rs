@@ -21,7 +21,7 @@ fn main() {
                 if api_key == kafka_constants::KAFKA_API_VERSIONS_KEY{
                     let api_versions_body = 
                     kafka_response_util::create_api_version_response(kafka_constants::NO_ERROR,
-                         0,
+                         kafka_constants::KAFKA_API_VERSIONS_KEY,
                          1, 4, 500);
                          items.push(Box::new(api_versions_body));
                     send_response(&mut stream, &create_response(items));
