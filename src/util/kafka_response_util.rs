@@ -8,13 +8,6 @@ pub struct ApiVersionsResponse{
     max_version: i16,
     throttle_time: i32
 }
-
-impl ApiVersionsResponse{
-    fn new(error_code: i16, api_key: i16, min_version: i16, max_version:i16, throttle_time: i32)->Self{
-        ApiVersionsResponse{error_code, api_key, min_version,max_version, throttle_time}
-    }
-}
-
 impl ToBytes for ApiVersionsResponse{
     fn to_bytes(&self) -> Vec<u8> {
         let mut bytes:Vec<u8> = Vec::new();
@@ -35,5 +28,5 @@ impl ToBytes for ApiVersionsResponse{
 }
 
 pub fn create_api_version_response(error_code: i16, api_key: i16, min_version: i16, max_version: i16, throttle_time: i32) -> ApiVersionsResponse{
-   ApiVersionsResponse{error_code: error_code,api_key: api_key, min_version: min_version,max_version: max_version, throttle_time: throttle_time}  
+   ApiVersionsResponse{error_code,api_key, min_version, max_version, throttle_time}  
 }

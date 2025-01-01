@@ -41,7 +41,7 @@ pub fn stream_input_to_bytes(stream: &mut TcpStream) -> Option<Vec<u8>>{
 }
 
 pub fn send_response(stream:&mut TcpStream, buf:&Vec<u8>){
-    print!("Sending response: {:?}", buf);
+    println!("Sending response: {:?}", buf);
     let result = stream.write(&buf);
     match result{
         Ok(bytes_send) => {
