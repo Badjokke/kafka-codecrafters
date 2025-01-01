@@ -18,7 +18,7 @@ impl ToBytes for ApiVersionsResponse{
         let mut throttle_time_bytes = self.throttle_time.to_be_bytes().to_vec();
         
         bytes.append(&mut error_code_bytes);
-        bytes.append(&mut (1 as u8).to_be_bytes().to_vec());
+        bytes.append(&mut (1 as i16).to_be_bytes().to_vec());
         bytes.append(&mut api_key_bytes);
         bytes.append(&mut min_version_bytes);
         bytes.append(&mut max_version_bytes);
