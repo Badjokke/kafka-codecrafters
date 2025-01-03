@@ -8,6 +8,7 @@ use util::kafka_response_util;
 fn main() {
     let listener = TcpListener::bind("127.0.0.1:9092").unwrap();
      for stream in listener.incoming() {
+         println!("accepted connection");
          match stream {
              Ok(mut stream) => {
                 let buf = match stream_input_to_bytes(&mut stream){
@@ -27,12 +28,12 @@ fn main() {
                          items.push(Box::new(api_versions_body));
                     send_response(&mut stream, &create_response(items));
                 }
+                println!("unknown key {api_key}. Not doing anything!");
              }
              Err(e) => {
                  println!("error: {}", e);
              }
          }
      }
-
-     println!("Main exit!");
+     println!("main exit!");
 }
