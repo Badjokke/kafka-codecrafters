@@ -33,4 +33,6 @@ fn main() {
              }
          }
      }
+
+     println!("Main exit!");
 }
