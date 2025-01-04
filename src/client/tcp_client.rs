@@ -3,6 +3,7 @@ use crate::util::byte_util::{create_response, send_response, stream_input_to_byt
 use crate::kafka_header_util;
 use crate::kafka_constants;
 use crate::kafka_response_util;
+
 pub fn handle_client(stream: &mut TcpStream){
     loop {
            match stream_input_to_bytes( stream){
