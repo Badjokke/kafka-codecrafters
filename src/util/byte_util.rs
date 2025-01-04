@@ -1,4 +1,5 @@
-use std::{io::{Read, Write}, mem, net::TcpStream, ptr::null};
+use core::panic;
+use std::{io::{Read, Write, ErrorKind}, mem, net::TcpStream, ptr::null};
 
 pub trait ToBytes{
     fn to_bytes(&self) -> Vec<u8>;
@@ -26,21 +27,15 @@ impl ToBytes for String{
     }
 }
 
-pub fn stream_input_to_string(stream: &mut TcpStream) ->Option<String>{
-    let payload_size: i32 = get_message_size(stream);
-    read_stream_to_string(stream, payload_size as usize)
-}
 
 pub fn stream_input_to_bytes(stream: &mut TcpStream) -> Option<Vec<u8>>{
-    let payload_size: i32 = get_message_size(stream);
-    println!("payload size: {payload_size}");
-    if payload_size == -1{
-        return None;
+    match get_message_size(stream){
+        Some(bytes) => read_stream_to_bytes(stream, bytes as usize),
+        None => None
     }
-    read_stream_to_bytes(stream,payload_size as usize)
 }
 
-pub fn send_response(stream:&mut TcpStream, buf:&Vec<u8>){
+pub fn send_response(stream:&mut TcpStream, buf:Vec<u8>){
     println!("Sending response: {:?}", buf);
     let result = stream.write(&buf);
     match result{
@@ -62,14 +57,17 @@ pub fn create_response(values:Vec<Box<dyn ToBytes>>) -> Vec<u8>{
     response
 }
 
-fn get_message_size(stream: &mut TcpStream) -> i32{
+fn get_message_size(stream: &mut TcpStream) -> Option<i32>{
     let mut buf: [u8;4] = [0;4];
     let result = stream.read(&mut buf);
     match result{
-        Ok(_bytes) => i32::from_be_bytes(buf),
-        Err(e) => {
-            println!("{:?}",e);
-            -1
+        Ok(_bytes) => Some(i32::from_be_bytes(buf)),
+        Err(e) if e.kind() == ErrorKind::ConnectionAborted => {
+            None
+        }
+        Err(e) =>{
+            println!("Error: {:?}", e);
+            panic!("i am panicking!");
         }
     }
 }

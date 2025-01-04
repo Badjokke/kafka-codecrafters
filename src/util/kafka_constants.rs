@@ -1,3 +1,4 @@
 pub const KAFKA_API_VERSIONS_KEY: i16 = 18;
 pub const UNSUPPORTED_API_VERSION_ERROR_CODE: i16 = 35;
 pub const NO_ERROR: i16 = 0;
+pub const API_VERSIONS: i16 = 4;
