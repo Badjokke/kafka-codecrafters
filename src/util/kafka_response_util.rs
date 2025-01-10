@@ -6,13 +6,16 @@ pub struct ApiVersionsResponse{
     api_key: i16,
     min_version:i16,
     max_version: i16,
-    throttle_time: i32
+    throttle_time: i32,
+    flag: bool
 }
 impl ToBytes for ApiVersionsResponse{
     fn to_bytes(&self) -> Vec<u8> {
         let mut bytes:Vec<u8> = Vec::new();
         //error_code
-        bytes.extend(&self.error_code.to_be_bytes());
+        if self.flag{
+            bytes.extend(&self.error_code.to_be_bytes());
+        }
         //api version count
         bytes.extend(&(3 as u8).to_be_bytes());
         //api version "struct"
@@ -28,6 +31,6 @@ impl ToBytes for ApiVersionsResponse{
     }
 }
 
-pub fn create_api_version_response(error_code: i16, api_key: i16, min_version: i16, max_version: i16, throttle_time: i32) -> ApiVersionsResponse{
-   ApiVersionsResponse{error_code,api_key, min_version, max_version, throttle_time}  
+pub fn create_api_version_response(error_code: i16, api_key: i16, min_version: i16, max_version: i16, throttle_time: i32, flag: bool) -> ApiVersionsResponse{
+   ApiVersionsResponse{error_code,api_key, min_version, max_version, throttle_time, flag}  
 }
