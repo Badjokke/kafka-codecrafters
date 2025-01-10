@@ -3,6 +3,7 @@ use crate::util::byte_util::{create_response, send_response, stream_input_to_byt
 use crate::kafka_header_util;
 use crate::kafka_constants;
 use crate::kafka_response_util;
+use crate::util::kafka_response_util::ApiVersionsResponse;
 
 pub fn handle_client(stream: &mut TcpStream){
     loop {
@@ -33,12 +34,17 @@ fn handle_client_message(buf: Vec<u8>) -> Option<Vec<u8>>{
     let error_code = get_kafka_error_code(api_version);             
     let api_versions_body =kafka_response_util::create_api_version_response(
         error_code,
-        kafka_constants::KAFKA_API_VERSIONS_KEY,
+        api_key,
         1, 4, 0);
+    let topics_versions_body: ApiVersionsResponse = kafka_response_util::create_api_version_response(error_code, api_key, 0, 0, 0);
     items.push(Box::new(api_versions_body));
+    items.push(Box::new(topics_versions_body));
     return Some(create_response(items));
 }
 
 fn get_kafka_error_code(api_version: i16) -> i16{
-    if api_version == kafka_constants::API_VERSIONS {kafka_constants::NO_ERROR} else {kafka_constants::UNSUPPORTED_API_VERSION_ERROR_CODE} 
+    match api_version{
+        kafka_constants::API_VERSIONS | kafka_constants::KAFKA_DESCRIBE_TOPIC_PARTITIONS_KEY => kafka_constants::NO_ERROR,
+        _ => kafka_constants::UNSUPPORTED_API_VERSION_ERROR_CODE
+    }
 }

@@ -72,20 +72,6 @@ fn get_message_size(stream: &mut TcpStream) -> Option<i32>{
     }
 }
 
-fn read_stream_to_string(stream: &mut TcpStream, bytes: usize)->Option<String>{
-    let mut buf:Vec<u8> = vec![0;bytes];
-    let result = stream.read(&mut buf[..]);
-    match result {
-        Ok(bytes_retrieved)=>{
-            assert_eq!(bytes, bytes_retrieved);
-           Some(u8_to_string(buf))
-        },
-        Err(e) => {
-            println!("{:?}",e);
-            None 
-        }
-    }
-}
 
 fn read_stream_to_bytes(stream: &mut TcpStream, bytes: usize) -> Option<Vec<u8>>{
     let mut buf: Vec<u8> = vec![0; bytes];
