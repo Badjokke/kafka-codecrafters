@@ -14,7 +14,6 @@ fn main() {
      for stream in listener.incoming() {
          match stream {
              Ok(mut stream) => {
-                let x = 5;
                 thread_pool.execute(move||{client::tcp_client::handle_client(&mut stream)});    
              }
              Err(e) => {
