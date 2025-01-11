@@ -35,8 +35,8 @@ fn handle_client_message(buf: Vec<u8>) -> Option<Vec<u8>>{
     let api_versions_body =kafka_response_util::create_api_version_response(
         error_code,
         api_key,
-        1, 4, 0, true);
-    let topics_versions_body: ApiVersionsResponse = kafka_response_util::create_api_version_response(error_code, api_key, 0, 0, 0, false);
+        1, 4, 0);
+    let topics_versions_body: ApiVersionsResponse = kafka_response_util::create_api_version_response(error_code, api_key, 0, 0, 0);
     items.push(Box::new(api_versions_body));
     items.push(Box::new(topics_versions_body));
     return Some(create_response(items));
