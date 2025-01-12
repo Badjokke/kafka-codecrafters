@@ -24,7 +24,7 @@ pub fn handle_client(stream: &mut TcpStream){
 
 fn handle_client_message(buf: Vec<u8>) -> Option<Vec<u8>>{
     println!("Handling client message: {:?}", buf); 
-    let (api_key, api_version, correlation_id )= kafka_header_util::parse_header(&buf);
+    let (api_key, api_version, correlation_id, client_id)= kafka_header_util::parse_header(&buf);
     let mut items: Vec<Box<dyn ToBytes>> = Vec::new();
     items.push(Box::new(correlation_id));
     if api_key != kafka_constants::KAFKA_API_VERSIONS_KEY {
