@@ -28,7 +28,7 @@ fn create_kafka_response(buf: Vec<u8>, api_key: i16) -> Option<Vec<u8>>{
             None
         },
         kafka_constants::KAFKA_DESCRIBE_TOPIC_PARTITIONS_KEY => {
-            println!("KAFKA_DESCRIBE_TOPIC_PARTITIONS_KEY");
+            let thing = kafka_request_util::parse_describe_topics_request(buf);
             None
         }
         _ => None
@@ -42,10 +42,11 @@ fn handle_client_message(buf: Vec<u8>) -> Option<Vec<u8>>{
         println!("Unknown API version: {api_key}");
         return None;
     }
-
+    let res = create_kafka_response(buf, api_key);
     let mut items: Vec<Box<dyn ToBytes>> = Vec::new();
     items.push(Box::new(correlation_id));
     let api_versions_body = kafka_response_util::create_api_version_response(error_code, 0);
+
     items.push(Box::new(api_versions_body));
     Some(create_response(items))
 }

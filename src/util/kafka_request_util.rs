@@ -22,7 +22,18 @@ pub fn parse_describe_topics_request(buf: Vec<u8>){
     buffer_offset = new_offset;
     let partition_limit = i32::from_be_bytes(buf[buffer_offset..buffer_offset + 4].try_into().unwrap());
     buffer_offset += 4;
-
+    let c = parse_cursor(&buf,buffer_offset);
+    println!("topic_count: {topic_count}");
+    for i in 0..topic_count{
+        println!("{:?} ", topics[i].name);
+    }
+    println!("partition limit: {partition_limit}");
+    if c.is_none(){
+        println!("No cursor!")
+    }
+    else {
+        println!("Cursor topic name {:?}", c.unwrap().topic_name);
+    }
 }
 //ignores tag buf
 fn parse_topics(buf: &Vec<u8>, topic_count: usize) -> (Vec<Topic>,usize){
