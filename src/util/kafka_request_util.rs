@@ -16,7 +16,7 @@ struct Cursor{
 
 pub fn parse_describe_topics_request(buf: Vec<u8>){
     let mut buffer_offset = 0;
-    let topic_count = u8::from_be_bytes(buf[buffer_offset..2].try_into().unwrap()) as usize;
+    let topic_count = u8::from_be_bytes(buf[buffer_offset..buffer_offset+2].try_into().unwrap()) as usize;
     buffer_offset += 2;
     let (topics, new_offset ) = parse_topics(&buf, topic_count);
     buffer_offset = new_offset;
