@@ -37,9 +37,9 @@ fn create_kafka_response(buf: Vec<u8>, api_key: i16) -> Option<Vec<u8>>{
 fn handle_client_message(buf: Vec<u8>) -> Option<Vec<u8>>{
     println!("Handling client message: {:?}", buf); 
     let (api_key, api_version, correlation_id, client_id)= kafka_header_util::parse_header(&buf);
-    let error_code = get_kafka_error_code(api_version);
+    let error_code = get_kafka_error_code(api_key);
     if error_code == kafka_constants::UNSUPPORTED_API_VERSION_ERROR_CODE{
-        println!("Unknown API key: {api_key}");
+        println!("Unknown API version: {api_key}");
         return None;
     }
 
