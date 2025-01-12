@@ -12,6 +12,9 @@ pub struct ApiVersionsResponse{
     api_keys: Vec<ApiKeys>,
     throttle_time: i32
 }
+pub struct DescribeTopicPartitionsResponse{
+    throttle_time: i32,
+}
 impl ToBytes for ApiKeys{
     fn to_bytes(&self) -> Vec<u8> {    
         let mut bytes: Vec<u8> = Vec::new();
@@ -33,11 +36,6 @@ impl ToBytes for ApiVersionsResponse{
         for i in 0..self.api_keys.len(){
             bytes.extend(self.api_keys[i].to_bytes());
         }
-        //api version "struct"
-        //bytes.extend(&self.api_key.to_be_bytes());
-        //bytes.extend(&self.min_version.to_be_bytes());
-        //bytes.extend(&self.max_version.to_be_bytes());
-        //bytes.extend(&(0 as u8).to_be_bytes());
         //throttle
         bytes.extend(&self.throttle_time.to_be_bytes());
         //empty tag buffer
