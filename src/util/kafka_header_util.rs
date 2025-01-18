@@ -25,5 +25,6 @@ pub fn parse_header(buffer:&Vec<u8>) -> (i16, i16, i32, String, usize){
     let request_api_version = parse_request_api_version(buffer);
     let client_id = parse_client_id(buffer);
     println!("Extracted {request_api_key} {request_api_version} {correlation_id} {client_id}");
-    (request_api_key, request_api_version, correlation_id, parse_client_id(buffer), (10+client_id.len()))
+    //expceting tag buffer to be always empty
+    (request_api_key, request_api_version, correlation_id, parse_client_id(buffer), (10+client_id.len()+1))
 }
