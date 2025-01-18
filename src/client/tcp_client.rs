@@ -42,7 +42,7 @@ fn handle_client_message(buf: Vec<u8>) -> Option<Vec<u8>>{
         println!("Unknown API version: {api_key}");
         return None;
     }
-    let res = create_kafka_response(buf, api_key);
+    let res = create_kafka_response(buf[(8+client_id.len())..buf.len()].to_vec(), api_key);
     let mut items: Vec<Box<dyn ToBytes>> = Vec::new();
     items.push(Box::new(correlation_id));
     let api_versions_body = kafka_response_util::create_api_version_response(error_code, 0);
