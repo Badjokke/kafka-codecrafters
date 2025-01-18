@@ -18,12 +18,12 @@ fn parse_client_id(buffer:&[u8]) -> String {
     let client_id_byte_offset = 10;
     String::from_utf8(buffer[client_id_byte_offset..client_id_byte_offset+client_id_size].try_into().unwrap()).expect("Failed to decode client id string!")
 }
-pub fn parse_header(buffer:&Vec<u8>) -> (i16, i16, i32, String){
+pub fn parse_header(buffer:&Vec<u8>) -> (i16, i16, i32, String, usize){
     println!("Parsing {:?}", buffer);
     let correlation_id = parse_correlation_id_v2(buffer);
     let request_api_key = parse_request_api_key(buffer);
     let request_api_version = parse_request_api_version(buffer);
     let client_id = parse_client_id(buffer);
     println!("Extracted {request_api_key} {request_api_version} {correlation_id} {client_id}");
-    (request_api_key, request_api_version, correlation_id, parse_client_id(buffer))
+    (request_api_key, request_api_version, correlation_id, parse_client_id(buffer), (10+client_id.len()))
 }

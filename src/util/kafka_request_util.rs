@@ -19,12 +19,12 @@ pub fn parse_describe_topics_request(buf: Vec<u8>){
     let mut buffer_offset = 0;
     let topic_count = u8::from_be_bytes(buf[buffer_offset..buffer_offset+1].try_into().unwrap()) as usize;
     buffer_offset += 2;
+    println!("Topics: {topic_count}");
     let (topics, new_offset ) = parse_topics(&buf, topic_count);
     buffer_offset = new_offset;
     let partition_limit = i32::from_be_bytes(buf[buffer_offset..buffer_offset + 4].try_into().unwrap());
     buffer_offset += 4;
     let c = parse_cursor(&buf,buffer_offset);
-    println!("topic_count: {topic_count}");
     for i in 0..topic_count{
         println!("{:?} ", topics[i].name);
     }
