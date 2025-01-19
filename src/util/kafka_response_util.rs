@@ -77,6 +77,7 @@ impl ToBytes for Topic{
         let mut bytes: Vec<u8> = Vec::new();
         bytes.extend(&self.error_code.to_be_bytes());
         bytes.extend(((&self.name.len()+1) as u8).to_be_bytes());
+        bytes.extend(self.name.to_bytes());
         let mut topic_id = self.topic_id.to_bytes_le();
         topic_id.reverse();
         bytes.extend_from_slice(&topic_id);
