@@ -1,9 +1,11 @@
 use std::net::TcpStream;
+use uuid::uuid;
 use crate::util::byte_util::{create_response, send_response, stream_input_to_bytes, ToBytes};
+use crate::util::kafka_request_util::DescribeTopicPartitionsRequest;
 use crate::{kafka_header_util, util};
 use crate::kafka_constants;
 use crate::kafka_response_util;
-use crate::util::kafka_response_util::ApiVersionsResponse;
+use crate::util::kafka_response_util::{ApiVersionsResponse, DescribeTopicPartitionsResponse, create_topic, create_partitions_topics_response};
 use util::kafka_request_util;
 pub fn handle_client(stream: &mut TcpStream){
     loop {
@@ -21,6 +23,13 @@ pub fn handle_client(stream: &mut TcpStream){
             }  
     }
 }
+
+fn describe_topic_partitions_response(req: DescribeTopicPartitionsRequest) -> DescribeTopicPartitionsResponse{
+    println!("Sending response with topic name: {:?}", req.topics[0].name);
+    let topic = create_topic(kafka_constants::UNKNOWN_TOPIC_OR_PARTITION, req.topics[0].name.clone(), uuid!("00000000-0000-0000-0000-000000000000"), true, Vec::new(),0x00000df8);
+    create_partitions_topics_response(0, vec![topic], None)
+}
+
 fn create_kafka_response(buf: Vec<u8>, api_key: i16) -> Option<Vec<u8>>{
     match api_key{
         kafka_constants::KAFKA_API_VERSIONS_KEY => {
@@ -29,7 +38,7 @@ fn create_kafka_response(buf: Vec<u8>, api_key: i16) -> Option<Vec<u8>>{
         },
         kafka_constants::KAFKA_DESCRIBE_TOPIC_PARTITIONS_KEY => {
             let thing = kafka_request_util::parse_describe_topics_request(buf);
-            None
+            Some(describe_topic_partitions_response(thing).to_bytes())
         }
         _ => None
     }
@@ -42,7 +51,6 @@ fn handle_client_message(buf: Vec<u8>) -> Option<Vec<u8>>{
         println!("Unknown API version: {api_key}");
         return None;
     }
-    println!("Header B size: {header_offset}");
     let res = create_kafka_response(buf[header_offset..].to_vec(), api_key);
     let mut items: Vec<Box<dyn ToBytes>> = Vec::new();
     items.push(Box::new(correlation_id));

@@ -1,13 +1,13 @@
 use crate::util::byte_util::ToBytes;
 pub struct DescribeTopicPartitionsRequest{
-    topics: Vec<Topic>,
-    response_partition_limit: i32,
-    cursor: Option<Cursor>,
-    tag_buffer: Vec<u8>
+    pub topics: Vec<Topic>,
+    pub response_partition_limit: i32,
+    pub cursor: Option<Cursor>,
+    pub tag_buffer: Vec<u8>
 }
-struct Topic{
-    name: String,
-    tag_buffer: Vec<u8>
+pub struct Topic{
+    pub name: String,
+    pub tag_buffer: Vec<u8>
 }
 pub struct Cursor{
     topic_name: String,

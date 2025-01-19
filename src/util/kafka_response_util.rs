@@ -21,16 +21,16 @@ pub struct DescribeTopicPartitionsResponse{
     next_cursor: Option<Cursor>,
     tag_buffer: Vec<u8>
 }
-struct Topic{
+pub struct Topic{
     error_code: i16,
     name: String,
     topic_id: Uuid,
     is_internal: bool,
-    partitions: Vec<Partitions>,
+    partitions: Vec<Partition>,
     topic_authorized_operations:i32,
     tag_buffer: Vec<u8>
 }
-struct Partitions{
+pub struct Partition{
     error_code: i16,
     partition_index: i32,
     leader_id: i32,
@@ -92,7 +92,7 @@ impl ToBytes for Topic{
         bytes  
     }
 }
-impl ToBytes for Partitions{
+impl ToBytes for Partition{
     fn to_bytes(&self) -> Vec<u8> {
         let mut bytes = Vec::new();
         bytes.extend(self.error_code.to_be_bytes());
@@ -146,4 +146,16 @@ fn create_api_versions_body() -> Vec<ApiKeys>{
 }
 pub fn create_api_version_response(error_code: i16, throttle_time: i32) -> ApiVersionsResponse{
    ApiVersionsResponse{error_code,api_keys:create_api_versions_body() ,throttle_time}  
+}
+
+pub fn create_topic(error_code: i16, name: String, topic_id: Uuid, is_internal:bool, partitions: Vec<Partition>, topic_authorized_operations: i32) -> Topic{
+    Topic { error_code, name, topic_id, is_internal, partitions, topic_authorized_operations, tag_buffer: vec![0] }
+}
+pub fn create_partitions_topics_response(throttle_time: i32, topics: Vec<Topic>, next_cursor: Option<Cursor>)->DescribeTopicPartitionsResponse{
+    DescribeTopicPartitionsResponse{
+       throttle_time,
+       topics,
+       next_cursor,
+       tag_buffer: vec![0]
+    }
 }
