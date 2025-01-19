@@ -57,6 +57,15 @@ pub fn create_response(values:Vec<Box<dyn ToBytes>>) -> Vec<u8>{
     response
 }
 
+pub fn vec_to_bytes(vector: &Vec<i32>)->Vec<u8>{
+    let mut v: Vec<u8> = Vec::new();
+    let bytes = vector.iter().map(|x| x.to_be_bytes());
+    for slice in bytes{
+        v.extend_from_slice(&slice);
+    }
+    v 
+}
+
 fn get_message_size(stream: &mut TcpStream) -> Option<i32>{
     let mut buf: [u8;4] = [0;4];
     let result = stream.read(&mut buf);

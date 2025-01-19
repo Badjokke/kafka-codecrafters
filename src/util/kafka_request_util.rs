@@ -1,20 +1,21 @@
+use crate::util::byte_util::ToBytes;
 pub struct DescribeTopicPartitionsRequest{
     topics: Vec<Topic>,
     response_partition_limit: i32,
-    cursor: Cursor,
+    cursor: Option<Cursor>,
     tag_buffer: Vec<u8>
 }
 struct Topic{
     name: String,
     tag_buffer: Vec<u8>
 }
-struct Cursor{
+pub struct Cursor{
     topic_name: String,
     partition_index: i32,
     tag_buffer: Vec<u8>
 }
 
-pub fn parse_describe_topics_request(buf: Vec<u8>){
+pub fn parse_describe_topics_request(buf: Vec<u8>) -> DescribeTopicPartitionsRequest{
     println!("Parsing describe topics request: {:?}", buf);
     let mut buffer_offset = 0;
     let topic_count = (u8::from_be_bytes(buf[buffer_offset..buffer_offset+1].try_into().unwrap()) as usize)-1;
@@ -24,16 +25,8 @@ pub fn parse_describe_topics_request(buf: Vec<u8>){
     let partition_limit = i32::from_be_bytes(buf[buffer_offset..buffer_offset + 4].try_into().unwrap());
     buffer_offset += 4;
     let c = parse_cursor(&buf,buffer_offset);
-    for i in 0..topic_count{
-        println!("{:?} ", topics[i].name);
-    }
     println!("partition limit: {partition_limit}");
-    if c.is_none(){
-        println!("No cursor!")
-    }
-    else {
-        println!("Cursor topic name {:?}", c.unwrap().topic_name);
-    }
+    DescribeTopicPartitionsRequest{topics, response_partition_limit: partition_limit, cursor: c, tag_buffer:vec![0]}
 }
 //ignores tag buf
 fn parse_topics(buf: &Vec<u8>, topic_count: usize, mut offset: usize) -> (Vec<Topic>,usize){
@@ -60,4 +53,18 @@ fn parse_cursor(buf: &Vec<u8>, mut offset: usize) -> Option<Cursor> {
     let partition_index = i32::from_be_bytes(buf[offset..offset+4].try_into().unwrap());
     offset += 4;
     Some(Cursor{topic_name, partition_index, tag_buffer:vec![0]})
+}
+
+
+
+
+impl ToBytes for Cursor{
+    fn to_bytes(&self) -> Vec<u8> {
+        let mut bytes = Vec::new();
+        bytes.extend(((&self.topic_name.len()+1)as u8).to_be_bytes());
+        bytes.extend_from_slice(&self.topic_name.as_bytes());
+        bytes.extend(&self.partition_index.to_be_bytes());
+        bytes.append(&mut vec![0]);
+        bytes
+    }
 }
