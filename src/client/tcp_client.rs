@@ -30,15 +30,14 @@ fn describe_topic_partitions_response(req: DescribeTopicPartitionsRequest) -> De
     create_partitions_topics_response(0, vec![topic], None)
 }
 
-fn create_kafka_response(buf: Vec<u8>, api_key: i16) -> Option<Vec<u8>>{
+fn create_kafka_response(buf: Vec<u8>, api_key: i16) -> Option<Box<dyn ToBytes>>{
     match api_key{
         kafka_constants::KAFKA_API_VERSIONS_KEY => {
-            println!("KAFKA_API_VERSIONS_KEY");
-            None
+            Some(Box::new(kafka_response_util::create_api_version_response(kafka_constants::NO_ERROR, 0)))
         },
         kafka_constants::KAFKA_DESCRIBE_TOPIC_PARTITIONS_KEY => {
             let thing = kafka_request_util::parse_describe_topics_request(buf);
-            Some(describe_topic_partitions_response(thing).to_bytes())
+            Some(Box::new(describe_topic_partitions_response(thing)))
         }
         _ => None
     }
@@ -51,12 +50,11 @@ fn handle_client_message(buf: Vec<u8>) -> Option<Vec<u8>>{
         println!("Unknown API version: {api_key}");
         return None;
     }
-    let res = create_kafka_response(buf[header_offset..].to_vec(), api_key);
+    let res = create_kafka_response(buf[header_offset..].to_vec(), api_key).expect("!!!");
     let mut items: Vec<Box<dyn ToBytes>> = Vec::new();
     items.push(Box::new(correlation_id));
-    let api_versions_body = kafka_response_util::create_api_version_response(error_code, 0);
 
-    items.push(Box::new(api_versions_body));
+    items.push(res);
     Some(create_response(items))
 }
 
