@@ -61,7 +61,7 @@ fn handle_client_message(buf: Vec<u8>) -> Option<Vec<u8>>{
 
 fn get_kafka_error_code(api_version: i16) -> i16{
     match api_version{
-        kafka_constants::API_VERSIONS | kafka_constants::KAFKA_DESCRIBE_TOPIC_PARTITIONS_KEY => kafka_constants::NO_ERROR,
+        kafka_constants::KAFKA_API_VERSIONS_KEY | kafka_constants::KAFKA_DESCRIBE_TOPIC_PARTITIONS_KEY => kafka_constants::NO_ERROR,
         _ => kafka_constants::UNSUPPORTED_API_VERSION_ERROR_CODE
     }
 }
