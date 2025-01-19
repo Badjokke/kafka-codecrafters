@@ -53,6 +53,7 @@ fn handle_client_message(buf: Vec<u8>) -> Option<Vec<u8>>{
     let res = create_kafka_response(buf[header_offset..].to_vec(), api_key).expect("!!!");
     let mut items: Vec<Box<dyn ToBytes>> = Vec::new();
     items.push(Box::new(correlation_id));
+    items.push(Box::new(0 as u8));
 
     items.push(res);
     Some(create_response(items))
